@@ -25,9 +25,23 @@ router.route('/add').post((req, res) => {
     .catch(err => res.status(400).json('Error: '+err));
 });
 
-router.route('/materialexists/:id').get((req, res) => {
+router.route('/materialexists/:id').get((req, res) => {  
     Entry.exists({materialId: req.params.id})
     .then(status => res.json(status))
+    .catch(err => res.status(400).json('Error: '+err));
+})
+
+router.route('/materialfindone/:id').get((req, res) => {
+    
+    Entry.findOne({materialId: req.params.id}).sort({'_id':-1}).limit(1)
+    .then(status => res.json(status))
+    .catch(err => res.status(400).json('Error: '+err));
+})
+
+router.route('/processExists').post((req, res) => {
+    
+    Entry.findOne({materialId: req.body.materialId, machineId: req.body.machineId})
+    .then(entry => res.json(entry))
     .catch(err => res.status(400).json('Error: '+err));
 })
 
